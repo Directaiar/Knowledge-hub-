@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Hub - Explore the Universe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 20px 20px;
+        }
+
+        h1 {
+            font-size: 3.8em;
+            margin-bottom: 12px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+            filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.5));
+        }
+
+        .subtitle {
+            font-size: 1.15em;
+            color: #9ca3af;
+        }
+
+        .search-section {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            background: rgba(17, 24, 39, 0.8);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 20px 120px 20px 28px;
+            background: #000000;
+            border: 2px solid #1f2937;
+            border-radius: 16px;
+            color: #ffffff;
+            font-size: 17px;
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .search-suggestions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .suggestion-tag {
+            padding: 8px 18px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            color: #818cf8;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suggestion-tag:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            background: rgba(17, 24, 39, 0.6);
+            padding: 10px;
+            border-radius: 20px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tab-btn {
+            padding: 14px 32px;
+            background: transparent;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #9ca3af;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 28px;
+            margin-bottom: 35px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border-radius: 20px;
+            padding: 36px;
+            border: 1px solid rgba(55, 65, 81, 0.4);
+            transition: all 0.4s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .info-card h3 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        .info-card p {
+            color: #d1d5db;
+            line-height: 1.9;
+            margin-bottom: 14px;
+        }
+
+        .highlight {
+            color: #818cf8;
+            font-weight: 700;
+        }
+
+        .icon {
+            font-size: 2.8em;
+            margin-bottom: 18px;
+        }
+
+        .ad-space {
+            background: rgba(17, 24, 39, 0.5);
+            border: 2px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            color: #6b7280;
+            margin: 35px 0;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2em; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Knowledge Hub</h1>
+            <p class="subtitle">Explore the infinite wonders of our universe and beyond</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchInput" placeholder="Search anything... What is the size of Milky Way?" />
+                <button class="search-btn" onclick="searchContent()">Search</button>
+            </div>
+            <div class="search-suggestions">
+                <span class="suggestion-tag" onclick="quickSearch('milky way')">Milky Way</span>
+                <span class="suggestion-tag" onclick="quickSearch('saturn')">Saturn</span>
+                <span class="suggestion-tag" onclick="quickSearch('black hole')">Black Holes</span>
+                <span class="suggestion-tag" onclick="quickSearch('mount everest')">Mount Everest</span>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('space')">Space</button>
+            <button class="tab-btn" onclick="showTab('world')">World Records</button>
+            <button class="tab-btn" onclick="showTab('nature')">Nature</button>
+            <button class="tab-btn" onclick="showTab('science')">Science</button>
+        </div>
+
+        <!-- Space Section -->
+        <div id="space" class="content-section active">
+            <h2 class="section-title">Space & Universe</h2>
+            <div class="ad-space">Advertisement Space - 728x90 Banner</div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">🌌</div>
+                    <h3>Milky Way Galaxy</h3>
+                    <p>Our home galaxy spans approximately <span class="highlight">100,000-200,000 light-years</span> in diameter.</p>
+                    <p>Contains <span class="highlight">200-400 billion stars</span> and has a mass of <span class="highlight">1.5 trillion solar masses</span>.</p>
+                    <p>The galaxy is <span class="highlight">13.6 billion years old</span> and rotates once every <span class="highlight">225-250 million years</span>.</p>
+                    <p>Our Sun orbits at a distance of <span class="highlight">26,000 light-years</span> from the galactic center.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">☀️</div>
+                    <h3>The Sun</h3>
+                    <p>Diameter: <span class="highlight">1,391,000 kilometers</span> (109 times Earth's diameter).</p>
+                    <p>Distance from Earth: <span class="highlight">149.6 million kilometers</span> (1 Astronomical Unit).</p>
+                    <p>Light takes <span class="highlight">8 minutes 20 seconds</span> to reach Earth.</p>
+                    <p>Surface temperature: <span class="highlight">5,500°C</span> and core temperature: <span class="highlight">15 million°C</span>.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🪐</div>
+                    <h3>Jupiter</h3>
+                    <p>Diameter: <span class="highlight">139,820 kilometers</span> (11 times Earth's diameter).</p>
+                    <p>Can fit <span class="highlight">1,300 Earths</span> inside Jupiter.</p>
+                    <p>Great Red Spot: A massive storm active for <span class="highlight">at least 350+ years</span>.</p>
+                    <p>Distance from Sun: <span class="highlight">778 million kilometers</span>.</p>
+                    <p>Has <span class="highlight">95 known moons</span>, including the 4 Galilean moons.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">💫</div>
+                    <h3>Saturn</h3>
+                    <p>Diameter: <span class="highlight">116,460 kilometers</span> (9.5 times Earth).</p>
+                    <p>Famous for its spectacular ring system extending <span class="highlight">282,000 kilometers</span> in diameter.</p>
+                    <p>Has <span class="highlight">146 known moons</span>, the largest being Titan.</p>
+                    <p>Average temperature: <span class="highlight">-140°C</span> on cloud tops.</p>
+                    <p>Takes <span class="highlight">29.5 Earth years</span> to orbit the Sun.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🕳️</div>
+                    <h3>Black Holes</h3>
+                    <p>Formed from collapsed massive stars with density so extreme that nothing can escape their gravitational pull.</p>
+                    <p>Event Horizon: The point of no return, beyond which <span class="highlight">not even light can escape</span>.</p>
+                    <p>Sagittarius A*: Supermassive black hole at the center of Milky Way with mass of <span class="highlight">4.1 million solar masses</span>.</p>
+                    <p>Time dilation occurs near black holes - time passes slower the closer you get to the event horizon.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">⭐</div>
+                    <h3>Stars & Nebulae</h3>
+                    <p>Our universe contains an estimated <span class="highlight">200 billion to 2 trillion galaxies</span>.</p>
+                    <p>Proxima Centauri: Nearest star to Earth at <span class="highlight">4.24 light-years</span> away.</p>
+                    <p>Orion Nebula: A stellar nursery containing <span class="highlight">thousands of young stars</span> forming from cosmic dust.</p>
+                    <p>Sirius: Brightest star visible from Earth, <span class="highlight">8.6 light-years</span> away.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🌍</div>
+                    <h3>Earth & Moon</h3>
+                    <p>Earth's age: <span class="highlight">4.54 billion years</span>.</p>
+                    <p>Distance from Earth to Moon: <span class="highlight">384,400 kilometers</span>.</p>
+                    <p>Moon's diameter: <span class="highlight">3,474 kilometers</span> (27% of Earth's diameter).</p>
+                    <p>Moon takes <span class="highlight">27.3 days</span> to orbit Earth and controls our tides.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🚀</div>
+                    <h3>Space Exploration</h3>
+                    <p>Voyager 1: Launched in <span class="highlight">1977</span>, now <span class="highlight">24+ billion kilometers</span> from Earth.</p>
+                    <p>International Space Station orbits Earth every <span class="highlight">90 minutes</span> at altitude of <span class="highlight">408 kilometers</span>.</p>
+                    <p>Mars: Fourth planet, distance of <span class="highlight">225 million kilometers</span> at closest approach.</p>
+                    <p>Humans last walked on the Moon in <span class="highlight">1972</span> during Apollo 17 mission.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- World Records Section -->
+        <div id="world" class="content-section">
+            <h2 class="section-title">World Records & Wonders</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">🏔️</div>
+                    <h3>Mount Everest</h3>
+                    <p>Height: <span class="highlight">8,849 meters</span> (29,032 feet) above sea level.</p>
+                    <p>Located in the <span class="highlight">Himalayas</span> on the Nepal-Tibet border.</p>
+                    <p>First successfully summited in <span class="highlight">1953</span> by Edmund Hillary and Tenzing Norgay.</p>
+                    <p>Temperature at summit: <span class="highlight">-40°C</span> with wind speeds up to <span class="highlight">200 km/h</span>.</p>
+                    <p>Over <span class="highlight">4,000 people</span> have reached the summit since 1953.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🏢</div>
+                    <h3>Burj Khalifa</h3>
+                    <p>World's tallest building at <span class="highlight">828 meters</span> (2,717 feet).</p>
+                    <p>Located in <span class="highlight">Dubai, United Arab Emirates</span>.</p>
+                    <p>Completed in <span class="highlight">2010</span> and has <span class="highlight">163 floors</span> above ground.</p>
+                    <p>Contains <span class="highlight">900 residential units</span> and luxury apartments.</p>
+                    <p>Elevator reaches top in <span class="highlight">60 seconds</span>.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🌊</div>
+                    <h3>Mariana Trench</h3>
+                    <p>Deepest point: <span class="highlight">10,994 meters</span> (36,070 feet) deep.</p>
+                    <p>Located in the <span class="highlight">Western Pacific Ocean</span> near Guam.</p>
+                    <p>Pressure at bottom: <span class="highlight">1,100 times atmospheric pressure</span>.</p>
+                    <p>Only 3 crewed expeditions have reached the bottom.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🏎️</div>
+                    <h3>Fastest Land Speed</h3>
+                    <p>Record: <span class="highlight">1,227.986 km/h</span> (763.035 mph) set in <span class="highlight">2022</span>.</p>
+                    <p>Set by Andy Green in the Bloodhound LSR vehicle.</p>
+                    <p>Previous record held for <span class="highlight">40+ years</span> at 1,190 km/h.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🏊</div>
+                    <h3>Pacific Ocean</h3>
+                    <p>Largest ocean: <span class="highlight">165.2 million km²</span> in area.</p>
+                    <p>Covers approximately <span class="highlight">46%</span> of world's ocean surface.</p>
+                    <p>Average depth: <span class="highlight">4,280 meters</span>.</p>
+                    <p>Contains more than <span class="highlight">46,000 islands</span>.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🌉</div>
+                    <h3>Longest Bridge</h3>
+                    <p>Danyang-Kunshan Grand Bridge: <span class="highlight">164.8 kilometers</span> long.</p>
+                    <p>Located in <span class="highlight">China</span> on the Beijing-Shanghai High-Speed Railway.</p>
+                    <p>Completed in <span class="highlight">2011</span> and cost approximately <span class="highlight">$8.5 billion</span>.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🏠</div>
+                    <h3>Great Pyramid of Giza</h3>
+                    <p>Originally <span class="highlight">146.6 meters</span> tall (now 138.5m).</p>
+                    <p>Base: <span class="highlight">230.4 meters</span> on each side.</p>
+                    <p>Built in <span class="highlight">2560 BC</span> during Pharaoh Khufu's reign.</p>
+                    <p>Contains approximately <span class="highlight">2.3 million stone blocks</span>, each weighing 2-80 tons.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🏃</div>
+                    <h3>Fastest Human Speed</h3>
+                    <p>100-meter sprint record: <span class="highlight">9.58 seconds</span> by Usain Bolt.</p>
+                    <p>Average speed during sprint: <span class="highlight">37.57 km/h</span>.</p>
+                    <p>Peak speed reached: <span class="highlight">44.72 km/h</span> between 60-80 meters.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nature Section -->
+        <div id="nature" class="content-section">
+            <h2 class="section-title">Nature & Earth</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">🌳</div>
+                    <h3>Amazon Rainforest</h3>
+                    <p>Spans <span class="highlight">5.5 million square kilometers</span> across South America.</p>
+                    <p>Stretches across <span class="highlight">9 countries</span>, with 60% in Brazil.</p>
+                    <p>Home to approximately <span class="highlight">10% of all species on Earth</span>.</p>
+                    <p>Contains <span class="highlight">390 billion individual trees</span> and <span class="highlight">16,000 species</span>.</p>
+                    <p>Produces approximately <span class="highlight">20% of world's oxygen</span>.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🦁</div>
+                    <h3>African Savanna</h3>
+                    <p>Covers approximately <span class="highlight">13 million square kilometers</span>.</p>
+                    <p>Home to the "Big Five": lions, leopards, elephants, buffalo, and rhinos.</p>
+                    <p>Serengeti's Great Migration involves <span class="highlight">1.5 million wildebeest</span> and
